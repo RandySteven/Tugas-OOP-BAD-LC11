@@ -16,4 +16,12 @@ public class Makanan extends Item{
 		this.weight = weight;
 	}
 
+	@Override
+	public void minStock(int stock) {
+		this.stock -= stock;
+	}
+	
+	public void updateStock(int stock) {
+		this.stock += stock;
+	}
 }

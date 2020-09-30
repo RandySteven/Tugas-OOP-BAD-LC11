@@ -70,8 +70,8 @@ public class Main {
 				System.out.println(minuman.getId());
 				System.out.println("Nama makanan : " + minuman.getName());
 				System.out.println("Harga makanan : " + minuman.getPrice());
-				System.out.println("Quantity makanan : " + minuman.getStock());
-				System.out.println("Berat makanan : " + minuman.getLiter());
+				System.out.println("Quantity minuman : " + minuman.getStock());
+				System.out.println("Berat minuman : " + minuman.getLiter());
 			}
 			System.out.println("Press Enter to back ...");
 			scan.nextLine();
@@ -84,21 +84,40 @@ public class Main {
 		}
 		System.out.println("Input masukkan item id : ");item_id=scan.nextInt();scan.nextLine();
 		for (Item item : itemList) {
-			if(item_id == item.getId()) {
-				find = true;
-				if(find==true) {
-					System.out.println("Masukkan qty : ");qty=scan.nextInt();scan.nextLine();
-					total = qty*item.getPrice();
-					total = transaction.total(qty, item.getPrice());
-					System.out.println("Total : " + total);
-					item.minStock(qty);
-					Transaction transaction = new Transaction(item_id, qty, total);
-					shop.updateMoneyEarned(transaction.getTotal());
-					transactionList.add(transaction);
-				}else {
-					System.out.println("Item tidak ditemukan");
+				if(item_id == item.getId()) {
+					find = true;
+					if(find==true) {
+						do {							
+							System.out.println("Masukkan qty : ");qty=scan.nextInt();scan.nextLine();
+							if(qty>item.getStock()) {
+								System.out.println("Quantity harus lebih kecil dari stock");
+							}
+						} while (qty>item.getStock());
+						total = qty*item.getPrice();
+						total = transaction.total(qty, item.getPrice());
+						System.out.println("Total : " + total);
+						item.minStock(qty);
+						for (Makanan makanan : makananList) {				
+							if(item.getId()==makanan.getId()) {
+								makanan.minStock(qty);
+							}
+						}
+						for (Minuman minuman : minumanList) {
+							if(item.getId()==minuman.getId()) {
+								minuman.minStock(qty);
+							}
+						}
+						Transaction transaction = new Transaction(item_id, qty, total);
+						shop.updateMoneyEarned(transaction.getTotal());
+						transactionList.add(transaction);
+					}else {
+						System.out.println("Item tidak ditemukan");
+					}
+					
+					if(find==true&&item.getStock()==0) {
+						System.out.println("Stock item saat ini tidak ada");
+					}
 				}
-			}
 		}
 		System.out.println("Press Enter to back ...");
 		scan.nextLine();
@@ -115,6 +134,63 @@ public class Main {
 		scan.nextLine();
 	}
 	
+	void updateStock() {
+		for (Item item : itemList) {
+			System.out.printf("%-2d %-20s %-7d %-5d \n", item.getId(), item.getName(), item.getPrice(), item.getStock());
+		}
+		System.out.println("Input masukkan item id : ");item_id=scan.nextInt();scan.nextLine();
+		for (Item item : itemList) {
+			if(item_id == item.getId()) {
+				find = true;
+				if(find==true) {
+					System.out.println("Masukkan qty : ");qty=scan.nextInt();scan.nextLine();
+					item.updateStock(qty);
+					for (Makanan makanan : makananList) {				
+						if(item.getId()==makanan.getId()) {
+							makanan.updateStock(qty);
+						}
+					}
+					for (Minuman minuman : minumanList) {
+						if(item.getId()==minuman.getId()) {
+							minuman.updateStock(qty);
+						}
+					}
+				}
+				else {
+					System.out.println("Item tidak ditemukan");
+				}		
+			}
+		}
+	}
+	
+	void deleteStock() {
+		for (Item item : itemList) {
+			System.out.printf("%-2d %-20s %-7d %-5d \n", item.getId(), item.getName(), item.getPrice(), item.getStock());
+		}
+		System.out.println("Input masukkan item id : ");item_id=scan.nextInt();scan.nextLine();
+		for (Item item : itemList) {
+			if(item_id == item.getId()) {
+				find = true;
+				if(find==true) {
+					for (Makanan makanan : makananList) {				
+						if(item.getId()==makanan.getId()) {
+							makananList.remove(item_id-1);
+						}
+					}
+					for (Minuman minuman : minumanList) {
+						if(item.getId()==minuman.getId()) {
+							minumanList.remove(item_id-1);
+						}
+					}
+					itemList.remove(item_id-1);
+				}
+				else {
+					System.out.println("Item tidak ditemukan");
+				}		
+			}
+		}
+	}
+	
 	public Main() {
 		do {
 			System.out.println("Shop total earned : " + shop.getMoneyEarned());
@@ -123,6 +199,8 @@ public class Main {
 			System.out.println("2. Lihat daftar barang");
 			System.out.println("3. Lakukan transaksi");
 			System.out.println("4. Lihat riwayat transaksi");
+			System.out.println("5. Update stock barang");
+			System.out.println("6. Delete barang");
 			System.out.println("0, Exit");
 			System.out.print(">>");input=scan.nextInt();scan.nextLine();
 			
@@ -143,8 +221,14 @@ public class Main {
 				viewHistoryTransaction();
 				break;
 			
+			case 5:
+				updateStock();
+				break;
+				
+			case 6:
+				deleteStock();
+				break;
 			default:
-				System.out.println("Input just from [1-4]");
 				break;
 			}
 		} while (input!=0);
