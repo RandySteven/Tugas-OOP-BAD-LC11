@@ -33,6 +33,7 @@ public class Main {
 			System.out.print("Masukkan liter : ");liter=scan.nextInt();scan.nextLine();
 			item = new Minuman(id, name, price, stock, liter);
 		}
+		System.out.println("Add item success");
 		System.out.println("Press Enter to back ...");
 		scan.nextLine();
 		itemList.add(item);
@@ -53,9 +54,7 @@ public class Main {
 	}
 	boolean find = false;
 	void transaction() {
-		for (Item item : itemList) {
-			System.out.printf("%-2d %-20s %-7d %-5d \n", item.getId(), item.getName(), item.getPrice(), item.getStock());
-		}
+		view();
 		System.out.println("Input masukkan item id : ");item_id=scan.nextInt();scan.nextLine();
 		for (Item item : itemList) {
 				if(item_id == item.getId()) {
@@ -106,9 +105,7 @@ public class Main {
 	}
 	
 	void updateStock() {
-		for (Item item : itemList) {
-			System.out.printf("%-2d %-20s %-7d %-5d \n", item.getId(), item.getName(), item.getPrice(), item.getStock());
-		}
+		view();
 		System.out.print("Input masukkan item id : ");item_id=scan.nextInt();scan.nextLine();
 		for (Item item : itemList) {
 			if(item_id == item.getId()) {
@@ -122,12 +119,12 @@ public class Main {
 				}		
 			}
 		}
+		System.out.println("Press Enter to back ...");
+		scan.nextLine();
 	}
 	
 	void deleteStock() {
-		for (Item item : itemList) {
-			System.out.printf("%-2d %-20s %-7d %-5d \n", item.getId(), item.getName(), item.getPrice(), item.getStock());
-		}
+		view();
 		System.out.print("Input masukkan item id yang mau di delete : ");item_id=scan.nextInt();scan.nextLine();
 		for (Item item : itemList) {
 			if(item_id == item.getId()) {
@@ -139,13 +136,13 @@ public class Main {
 		}
 		else {
 			System.out.println("Item tidak ditemukan");
-		}	
+		}
+		System.out.println("Press Enter to back ...");
+		scan.nextLine();
 	}
 	
 	void updateProduct() {
-		for (Item item : itemList) {
-			System.out.printf("%-2d %-20s %-7d %-5d \n", item.getId(), item.getName(), item.getPrice(), item.getStock());
-		}
+		view();
 		System.out.print("Input masukkan item id yang mau di-update : ");item_id=scan.nextInt();scan.nextLine();
 		for (Item item : itemList) {
 			if(item_id == item.getId()) {
@@ -170,6 +167,8 @@ public class Main {
 		else {
 			System.out.println("Item tidak ditemukan");
 		}
+		System.out.println("Press Enter to back ...");
+		scan.nextLine();
 	}
 	
 	public Main(){
@@ -194,6 +193,7 @@ public class Main {
 
 			case 2:
 				view();
+				System.out.println("Press Enter to back ...");scan.nextLine();
 				break;
 
 			case 3:
